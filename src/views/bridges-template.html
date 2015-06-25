@@ -3,9 +3,11 @@
 <ul class="bridge-list">
   <% m.bridges.forEach(function (bridge) { %>
     <li class="bridge">
-      <%- bridge.erected %>
-      <%- bridge.material %>
-      <%- bridge.type %>
+      <a href="#bridges/<%- bridge.id %>">
+        <%- bridge.erected %>
+        <%- bridge.material %>
+        <%- bridge.type %>
+      </a>
     </li>
   <% }) %>
 </ul>
