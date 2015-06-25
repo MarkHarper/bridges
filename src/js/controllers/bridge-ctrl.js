@@ -4,6 +4,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var views = require('views');
 var router = require('../router');
+var c3 = require('c3');
 
 router.route('bridges/:id', function (bridgeId) {
   $.ajax({
@@ -36,5 +37,32 @@ router.route('bridges/:id', function (bridgeId) {
     var bridgeHTML = templateFn(bridge);
     
     $('.main-content').html(bridgeHTML);
+    
+    renderChart(bridge, bridgesArray);
+  }
+  
+  function renderChart(bridge, bridgesArray) {
+    var older = bridgesArray.filter(function (b) {
+      return b.erected < bridge.erected;
+    }).length;
+    
+    var newer = bridgesArray.filter(function (b) {
+      return b.erected > bridge.erected;
+    }).length;
+    
+    c3.generate({
+      bindto: '.bridge-chart',
+      data: {
+        columns: [
+          ['Older', older],
+          ['Newer', newer],
+          ['Same', bridgesArray.length - newer - older]
+        ],
+        type : 'pie'
+      },
+      color: {
+        pattern: ['#3FBEBB', '#FF5843', '#39B54A']
+      }
+    });
   }
 });
