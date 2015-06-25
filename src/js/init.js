@@ -1,15 +1,15 @@
 'use strict';
 
 var $ = require('jquery');
+var _ = require('underscore');
+var views = require('views');
 
 $.ajax({
   url: 'data/bridges.data',
   method: 'GET'
 })
 .then(parseBridgesCsv)
-.then(function (data) {
-  console.log(data);
-});
+.then(renderBridges);
 
 function parseBridgesCsv(bridgesCsv) {
   return bridgesCsv
@@ -25,4 +25,12 @@ function parseBridgesCsv(bridgesCsv) {
         type: cells[12]
       };
     });
+}
+
+function renderBridges(bridgesArray) {
+  var bridgesTemplate = views['bridges-template'];
+  var templateFn = _.template(bridgesTemplate, { variable: 'm' });
+  var bridgesHTML = templateFn({ bridges: bridgesArray });
+  
+  $('.main-content').html(bridgesHTML);
 }
